@@ -1,33 +1,62 @@
 package stepDefinitions;
 
 import io.cucumber.java.After;
+import io.cucumber.java.AfterStep;
 import io.cucumber.java.Before;
+import io.cucumber.java.Scenario;
+import org.openqa.selenium.OutputType;
+import org.openqa.selenium.TakesScreenshot;
+import org.openqa.selenium.WebDriver;
+import utils.TestContextSetup;
+import org.apache.commons.io.FileUtils;
+
+import java.io.File;
+import java.io.IOException;
 
 public class Hooks {
 
+    TestContextSetup testContextSetup;
 
-    @Before("@MobileTest")
-    public void beforevaldiation()
-    {
-        System.out.println("Before Mobile  hook");
+    public Hooks(TestContextSetup testContextSetup) {
+        this.testContextSetup = testContextSetup;
     }
 
-    @After("@MobileTest")
-    public void Aftervaldiation()
-    {
-        System.out.println("  After Mobile before hook");
+    @After
+    public void AfterScenario() throws IOException {
+        testContextSetup.testBase.WebDriverManager().quit();
     }
 
-    @Before("@WebTest")
-    public void beforeWebvaldiation()
-    {
-        System.out.println("Before Web  hook");
+    @AfterStep
+    public void AddScreenshot(Scenario scenario) throws IOException {
+        WebDriver driver = testContextSetup.testBase.WebDriverManager();
+        if (scenario.isFailed()) {
+            //screenshot
+            File sourcePath = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
+            byte[] fileContent = FileUtils.readFileToByteArray(sourcePath);
+            scenario.attach(fileContent, "image/png", "image");
+        }
+
     }
 
-    @After("@WebTest")
-    public void AfterWebvaldiation()
-    {
-        System.out.println("  After Web before hook");
-    }
+    //JUnitProject
+//    @Before("@MobileTest")
+//    public void beforevaldiation() {
+//        System.out.println("Before Mobile  hook");
+//    }
+//
+//    @After("@MobileTest")
+//    public void Aftervaldiation() {
+//        System.out.println("  After Mobile before hook");
+//    }
+//
+//    @Before("@WebTest")
+//    public void beforeWebvaldiation() {
+//        System.out.println("Before Web  hook");
+//    }
+//
+//    @After("@WebTest")
+//    public void AfterWebvaldiation() {
+//        System.out.println("  After Web before hook");
+//    }
 }
 

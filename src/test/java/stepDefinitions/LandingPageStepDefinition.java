@@ -9,7 +9,6 @@ import pageObjects.LandingPage;
 import utils.TestContextSetup;
 
 public class LandingPageStepDefinition {
-    public WebDriver driver;
     public String landingPageProductName;
     TestContextSetup testContextSetup;
     LandingPage landingPage;
@@ -34,7 +33,6 @@ public class LandingPageStepDefinition {
 
     @When("Added {string} items of the selected product to cart")
     public void Added_items_product(String quantity) {
-
         landingPage.incrementQuantity(Integer.parseInt(quantity));
         landingPage.addToCart();
     }
